@@ -1,0 +1,44 @@
+version: '3.1'
+services:
+  db:
+    image: postgres:15-alpine
+    restart: always
+    container_name: postgres
+    user: postgres
+    ports:
+      - "5432:5432"
+    deploy:
+      mode: replicated
+      replicas: 1
+    environment:
+      PGDATA: /var/lib/postgresql/data/pgdata/
+      POSTGRES_USER: romant
+      POSTGRES_PASSWORD: 12345678
+      POSTGRES_DB: skyeyedb
+    volumes:
+      - './data:/var/lib/postgresql/data:Z'
+  cache:
+    image: "redis"
+    container_name: redis-cache
+    ports:
+      - "6379:6379"
+    expose:
+      - 6379
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+      - REDIS_DISABLE_COMMANDS=FLUSHDB,FLUSHALL
+  user-service:
+    container_name: user-data-service
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8282:8282"
+    depends_on:
+      - db
+      - cache
+    environment:
+      - SERVER_PORT=8282
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db/skyeyedb
+      - SPRING_REDIS_HOST=cache
+      - SPRING_REDIS_PORT=6379
