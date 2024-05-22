@@ -33,12 +33,12 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "8282:8282"
+      - "8081:8081"
     depends_on:
       - db
       - cache
     environment:
-      - SERVER_PORT=8282
+      - SERVER_PORT=8081
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db/skyeyedb
       - SPRING_REDIS_HOST=cache
       - SPRING_REDIS_PORT=6379

@@ -15,7 +15,7 @@ import org.springframework.data.redis.serializer.RedisSerializationContext.Seria
 
 @Configuration
 @AutoConfigureAfter(RedisAutoConfiguration.class)
-@EnableCaching
+//@EnableCaching
 public class RedisConfiguration {
 
   @Bean
